@@ -86,6 +86,7 @@ const getPath = function (reqParams) {
 }
 
 // 这段代码首先会检查已有的记录
+// 如果获取记录失败，返回 get records faild
 // 如果记录不存在, 会新建一个解析, 并返回 created
 // 如果记录存在, ip 没变化, 不会更新 ip, 并返回 nochg
 // 如果记录存在, ip 有变化, 会更新 ip, 并返回 updated
@@ -127,6 +128,9 @@ const updateRecord = (target, callback) => {
         // 获取要更新的域名的 RecordId, 并检查是否需要更新
         let shouldUpdate = false;
         let shouldAdd = true;
+        if (!result.DomainRecords) {
+          return callback('get records faild');
+        }
         result.DomainRecords.Record
           .filter(record => record.RR === updateParmas.RR)
           .forEach(record => {
